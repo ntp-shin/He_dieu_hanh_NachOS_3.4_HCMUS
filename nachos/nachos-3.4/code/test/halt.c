@@ -15,6 +15,13 @@
 int
 main()
 {
+    //char buffer[10];
+    char *buffer;
+    PrintString("Nhap vao chuoi: ");
+    ReadString(buffer, 10);  
+    PrintString("\n");
+    PrintString(buffer);
+    PrintString(" Xinchao Nachos!!\n");
     Halt();
     /* not reached */
 }
