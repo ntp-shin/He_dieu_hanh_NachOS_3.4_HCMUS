@@ -29,6 +29,9 @@
 #define SC_Close	8
 #define SC_Fork		9
 #define SC_Yield	10
+#define SC_ReadInt  11
+#define SC_ReadString 12
+#define SC_PrintString 13
 
 #ifndef IN_ASM
 
@@ -43,8 +46,11 @@
  */
 
 /* Stop Nachos, and print out performance stats */
-void Halt();		
- 
+void Halt();
+
+// Cac ham syscall 
+void ReadString(char buffer[], int length);
+void PrintString(char buffer[]);		
 
 /* Address space control operations: Exit, Exec, and Join */
 
@@ -122,7 +128,7 @@ void Fork(void (*func)());
 /* Yield the CPU to another runnable thread, whether in this address space 
  * or not. 
  */
-void Yield();		
+void Yield();	
 
 #endif /* IN_ASM */
 
