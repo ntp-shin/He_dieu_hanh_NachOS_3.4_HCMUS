@@ -169,7 +169,7 @@ SRandomNum:
 	syscall
 	j	$31
 	.end SRandomNum
-
+	
 	.globl RandomNum
 	.ent	RandomNum
 RandomNum:
