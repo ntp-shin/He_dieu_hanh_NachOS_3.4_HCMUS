@@ -41,12 +41,17 @@ int main()
 
     // ========== Check: ReadString, PrintString ==========
     char *buffer;
+    int temp = 100;
     PrintString("Nhap mot chuoi: ");
     ReadString(buffer, 10);
     
-    PrintString("Chuoi vua nhap la: \"");
+    PrintString("Chuoi vua nhap la: ");
     PrintString(buffer);
-    PrintString("\"\nBye");
+
+    PrintString("\nNhap mot so: ");
+    temp = ReadNum();
+    PrintNum(temp);
+    PrintString("\nBye");
 
     Halt();
     // ==================================================
