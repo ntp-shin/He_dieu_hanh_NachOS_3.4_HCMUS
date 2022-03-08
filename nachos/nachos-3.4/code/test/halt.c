@@ -14,6 +14,19 @@
 
 int main()
 {
+    // ========== Check: ReadNum, PrintNum ==========
+    // int temp = 100;
+    // PrintString("Nhap mot so: ");
+    // temp = ReadNum();
+    
+    // PrintString("So vua nhap la: \"");
+    // PrintNum(temp);
+
+    // PrintString("\"\nBye");
+    // Halt();
+    // ==================================================
+
+
     // ========== Check: ReadChar, PrintChar ==========
     // char c = 't';
 
@@ -39,21 +52,34 @@ int main()
     // ==================================================
 
 
-    // ========== Check: ReadString, PrintString ==========
-    char *buffer;
-    int temp = 100;
-    PrintString("Nhap mot chuoi: ");
-    ReadString(buffer, 10);
-    
-    PrintString("Chuoi vua nhap la: ");
-    PrintString(buffer);
+    // ========== Check: RandomNum ==========
+    int r, i;
+    SRandomNum();
 
-    PrintString("\nNhap mot so: ");
-    temp = ReadNum();
-    PrintNum(temp);
-    PrintString("\nBye");
+    for (i = 0; i < 10; ++i)
+    {
+        PrintString(" - Random[");
+        PrintNum(i);
+        PrintString("] = ");
+
+        PrintNum(RandomNum());
+        PrintChar('\n');
+    }
 
     Halt();
+    // ==================================================
+
+
+    // ========== Check: ReadString, PrintString ==========
+    // char *buffer;
+    // PrintString("Nhap mot chuoi: ");
+    // ReadString(buffer, 10);
+    
+    // PrintString("Chuoi vua nhap la: ");
+    // PrintString(buffer);
+
+    // PrintString("\"\nBye");
+    // Halt();
     // ==================================================
     /* not reached */
 }

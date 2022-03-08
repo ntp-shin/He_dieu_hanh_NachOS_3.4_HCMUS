@@ -21,6 +21,9 @@
 // All rights reserved.  See copyright.h for copyright notice and limitation 
 // of liability and disclaimer of warranty provisions.
 
+#include <cstdlib>
+#include <ctime>
+
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
@@ -152,10 +155,12 @@ ExceptionHandler(ExceptionType which)
         switch (type)
         {
         case SC_Halt:
+        {
             DEBUG('a', "\nShutdown, initiated by user program!\n");
             printf("\nShutdown, initiated by user program!\n");
             interrupt->Halt();
             return;
+        }
 
         case SC_ReadNum:
         {
@@ -233,7 +238,7 @@ ExceptionHandler(ExceptionType which)
             return;     
         }
 
-            case SC_PrintNum:
+        case SC_PrintNum:
         {   
             // Input: mot so integer
                     // Output: khong co 
@@ -293,6 +298,7 @@ ExceptionHandler(ExceptionType which)
         }
 
         case SC_ReadChar:
+        {
             //Input: Khong co
             //Output: Duy nhất 1 ky tu (char)
             //Cong dung: Doc mot ky tu tu nguoi dung nhap
@@ -325,8 +331,10 @@ ExceptionHandler(ExceptionType which)
             delete buffer;
             IncreasePC();
             break;
+        }
 
         case SC_PrintChar:
+        {
             // Input: Ki tu(char)
 			// Output: Ki tu(char)
 			// Cong dung: Xuat mot ki tu la tham so arg ra man hinh
@@ -336,6 +344,23 @@ ExceptionHandler(ExceptionType which)
 			gSynchConsole->Write(&c, 1); // In ky tu tu bien c, 1 byte
 			IncreasePC();
 			break;
+        }
+
+        case SC_SRandomNum:
+        {
+            srand(time(NULL));
+            IncreasePC();
+            break;
+        }
+
+        case SC_RandomNum:
+        {
+            int res;
+            res = rand();
+            machine->WriteRegister(2, res);
+            IncreasePC();
+            break;
+        }
 
         case SC_ReadString:
 	    {
