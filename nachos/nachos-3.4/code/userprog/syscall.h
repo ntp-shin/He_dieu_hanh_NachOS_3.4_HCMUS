@@ -30,10 +30,13 @@
 #define SC_Fork		9
 #define SC_Yield	10
 
-#define SC_ReadChar 11
-#define SC_PrintChar    12
-#define SC_ReadString   13
-#define SC_PrintString  14
+#define SC_ReadNum     11
+#define SC_PrintNum    12
+#define SC_ReadChar    13
+#define SC_PrintChar   14
+#define SC_RandomNum   15
+#define SC_ReadString  16
+#define SC_PrintString 17
 
 #ifndef IN_ASM
 
@@ -128,6 +131,10 @@ void Fork(void (*func)());
  * or not. 
  */
 void Yield();		
+
+int ReadNum();
+
+void PrintNum(int number);
 
 char ReadChar();
 
