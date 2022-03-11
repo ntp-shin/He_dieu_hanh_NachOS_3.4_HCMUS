@@ -241,8 +241,8 @@ ExceptionHandler(ExceptionType which)
         case SC_PrintNum:
         {   
             // Input: mot so integer
-                    // Output: khong co 
-                    // Chuc nang: In so nguyen len man hinh console
+            // Output: khong co 
+            // Chuc nang: In so nguyen len man hinh console
             int number = machine->ReadRegister(4);
             if(number == 0)
             {
@@ -293,8 +293,7 @@ ExceptionHandler(ExceptionType which)
             gSynchConsole->Write(buffer, numberOfNum);
             delete buffer;
             IncreasePC();
-            return;                 
-                    
+            return;
         }
 
         case SC_ReadChar:
@@ -402,11 +401,11 @@ ExceptionHandler(ExceptionType which)
             break;
         }
 
-        // default:
-        //     DEBUG('a', "\nUnexpected user mode exception!\n");
-        //     printf("\nUnexpected user mode exception %d %d!\n", which, type);
-        //     interrupt->Halt();
-        //     break;
+        default:
+            DEBUG('a', "\nUnexpected user mode exception!\n");
+            printf("\nUnexpected user mode exception %d %d!\n", which, type);
+            interrupt->Halt();
+            break;
         }
         break;
 

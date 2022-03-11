@@ -4,6 +4,7 @@ int main()
 {
     int a[100], n, i, j, t, c;
 
+    // Nhap so pt cua mang
     PrintString("Nhap so pt mang [1; 100]: ");
     n = ReadNum();
     while (n <= 0 || n > 100)
@@ -12,6 +13,7 @@ int main()
         n = ReadNum();
     }
 
+    // Nhap mang
     for (i = 0; i < n; ++i)
     {
         PrintString(" + Array[");
@@ -20,6 +22,7 @@ int main()
         a[i] = ReadNum();
     }
 
+    // Chon cach sap xep
     PrintString("Chon cach sap xep [0] Tang - [1] Giam: ");
     c = ReadNum();
     while (c != 0 && c != 1)
@@ -28,6 +31,7 @@ int main()
         c = ReadNum();
     }
 
+    // Bubble sort
     for (i = 0; i < n - 1; ++i)
         for (j = n - 1; j > i; --j)
             if (a[j] < a[j - 1] && c == 0 || a[j] > a[j - 1] && c == 1)
@@ -37,6 +41,7 @@ int main()
                 a[j - 1] = t;
             }
 
+    // In mang sau khi sap xep
     PrintString("Mang sau khi sap xep la:\t");
     for (i = 0; i < n; ++i)
     {
