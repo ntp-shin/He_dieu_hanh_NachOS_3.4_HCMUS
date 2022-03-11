@@ -186,6 +186,17 @@ ExceptionHandler(ExceptionType which)
                 lastNumIndex = 1;                                           
             }
             
+            // Nhap chuoi rong
+            if (buffer[0] == '\0')
+            {
+                DEBUG('a', "ERROR: The integer number is not valid!\n");
+                printf("The integer number is not valid!\n");
+                machine->WriteRegister(2, -2147483648);
+                IncreasePC();
+                delete buffer;
+                return;
+            }
+
             // Kiem tra tinh hop le cua so nguyen buffer
             for(int i = firstNumIndex; i < numbytes; i++)                   
             {
@@ -197,9 +208,9 @@ ExceptionHandler(ExceptionType which)
                         // So khong hop le
                         if(buffer[j] != '0')
                         {
-                            printf("\n\n The integer number is not valid");
-                            DEBUG('a', "\n The integer number is not valid");
-                            machine->WriteRegister(2, 0);
+                            DEBUG('a', "ERROR: The integer number is not valid!\n");
+                            printf("The integer number is not valid!\n");
+                            machine->WriteRegister(2, -2147483648);
                             IncreasePC();
                             delete buffer;
                             return;
@@ -209,11 +220,11 @@ ExceptionHandler(ExceptionType which)
                     lastNumIndex = i - 1;               
                     break;                           
                 }
-                else if(buffer[i] < '0' && buffer[i] > '9')
+                else if(buffer[i] < '0' || buffer[i] > '9')
                 {
-                    printf("\n\n The integer number is not valid");
-                    DEBUG('a', "\n The integer number is not valid");
-                    machine->WriteRegister(2, 0);
+                    DEBUG('a', "ERROR: The integer number is not valid!\n");
+                    printf("The integer number is not valid!\n");
+                    machine->WriteRegister(2, -2147483648);
                     IncreasePC();
                     delete buffer;
                     return;

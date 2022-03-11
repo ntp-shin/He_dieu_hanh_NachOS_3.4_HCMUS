@@ -2,7 +2,7 @@
 
 int main()
 {
-    int temp = 100;
+    int temp;
     char c = 't';
     int r, i;
     char *buffer;
@@ -12,9 +12,12 @@ int main()
     PrintString("Nhap mot so: ");
     temp = ReadNum();
     
-    PrintString("So vua nhap la: \"");
-    PrintNum(temp);
-    PrintString("\"\n\n");
+    if (temp != -2147483648)
+    {
+        PrintString("So vua nhap la: \"");
+        PrintNum(temp);
+        PrintString("\"\n\n");
+    }
     // ==================================================
 
 
