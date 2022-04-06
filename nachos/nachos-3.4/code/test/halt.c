@@ -11,8 +11,37 @@
  */
 
 #include "syscall.h"
-
+#define MAX_LENGTH 32
 int main()
-{
+{   
+	char* fileName;
+	int c = 1;
+	PrintString("Nhap: ");
+	ReadString(fileName, 100);
+	PrintString("Ha???????????????????\n");
+	c = Create(fileName);
+
+	if (c == 0) // Goi ham CreateFile de tao file. Tra ve 0 neu thanh cong
+	{
+		PrintString("Create file thanh cong.");
+	}
+	else
+	{
+		PrintString("Loi khi tao file.");
+    }
+
+	PrintString("Nhap: ");
+	ReadString(fileName, 100);
+	PrintString("Gi day???????????????????\n");
+	c = Create(fileName);
+
+	if (c == 0) // Goi ham CreateFile de tao file. Tra ve 0 neu thanh cong
+	{
+		PrintString("Create file thanh cong.");
+	}
+	else
+	{
+		PrintString("Loi khi tao file.");
+    }
     Halt();
 }
