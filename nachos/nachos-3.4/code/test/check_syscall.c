@@ -11,7 +11,6 @@ int main()
     // ========== Check: ReadNum, PrintNum ==========
     PrintString("Nhap mot so: ");
     temp = ReadNum();
-    
     if (temp != -2147483648)
     {
         PrintString("So vua nhap la: \"");
