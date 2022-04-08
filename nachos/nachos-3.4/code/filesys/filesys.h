@@ -43,6 +43,9 @@
 				// implementation is available
 class FileSystem {
   public:
+  	//Khai bao
+  	OpenFile* openf[10];
+	int index;
     FileSystem(bool format) {}
 
     bool Create(char *name, int initialSize) { 
@@ -59,7 +62,15 @@ class FileSystem {
 	  if (fileDescriptor == -1) return NULL;
 	  return new OpenFile(fileDescriptor);
       }
-
+	int FindFreeSlot()
+	{
+		for(int i = 2; i < 10; i++)
+		{
+			printf("\n33333333333333333333333\n");
+			if(openf[i] == NULL) return i;		
+		}
+		return -1;
+	}
     bool Remove(char *name) { return Unlink(name) == 0; }
 
 };
@@ -67,6 +78,9 @@ class FileSystem {
 #else // FILESYS
 class FileSystem {
   public:
+	//Khai bao
+  	OpenFile* openf[10];
+	int index;
     FileSystem(bool format);		// Initialize the file system.
 					// Must be called *after* "synchDisk" 
 					// has been initialized.
@@ -85,6 +99,8 @@ class FileSystem {
 
     void Print();			// List all the files and their contents
 
+		//Ham tim slot trong
+	int FindFreeSlot();
   private:
    OpenFile* freeMapFile;		// Bit map of free disk blocks,
 					// represented as a file

@@ -227,6 +227,7 @@ FileSystem::Create(char *name, int initialSize)
 OpenFile *
 FileSystem::Open(char *name)
 { 
+    //int freeSlot = this->FindFreeSlot();
     Directory *directory = new Directory(NumDirEntries);
     OpenFile *openFile = NULL;
     int sector;
@@ -237,7 +238,20 @@ FileSystem::Open(char *name)
     if (sector >= 0) 		
 	openFile = new OpenFile(sector);	// name was found in directory 
     delete directory;
-    return openFile;				// return NULL if not found
+    //return openFile;				// return NULL if not found
+	index++;
+	return openf[index - 1];
+}
+
+int 
+FileSystem::FindFreeSlot()
+{
+	for(int i = 2; i < 10; i++)
+	{
+        printf("\n33333333333333333333333\n");
+		if(openf[i] == NULL) return i;		
+	}
+	return -1;
 }
 
 //----------------------------------------------------------------------

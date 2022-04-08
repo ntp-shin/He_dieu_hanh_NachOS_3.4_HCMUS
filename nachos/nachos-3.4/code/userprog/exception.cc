@@ -466,6 +466,39 @@ ExceptionHandler(ExceptionType which)
             delete filename; 
             return; 
         }
+		case SC_Open:
+		{
+			// Input: arg1: Dia chi cua chuoi name, arg2: type
+			// Output: Tra ve OpenFileID neu thanh, -1 neu loi
+			// Chuc nang: Tra ve ID cua file.
+            printf("\n1111111111111111111\n");
+			//OpenFileID Open(char *name, int type)
+			int virtAddr = machine->ReadRegister(4); // Lay dia chi cua tham so name tu thanh ghi so
+			char* filename;
+			filename = User2System(virtAddr, MaxFileLength); // Copy chuoi tu vung nho User Space sang System Space voi bo dem name dai MaxFileLength
+			//Kiem tra xem OS con mo dc file khong
+			printf("\n222222222222222222222222\n");
+			// update 4/1/2018
+			int freeSlot = fileSystem->FindFreeSlot();
+            
+			if (freeSlot != -1) //Chi xu li khi con slot trong
+			{
+                printf("\n33333333333333333333333\n");
+                if ((fileSystem->openf[freeSlot] = fileSystem->Open(filename)) != NULL) //Mo file thanh cong
+                {
+                    printf("\n4444444444444444444444444\n");
+                    machine->WriteRegister(2, freeSlot); //tra ve OpenFileID
+                }
+                IncreasePC();
+				delete[] filename;
+                
+				return;
+			}
+			machine->WriteRegister(2, -1); //Khong mo duoc file return -1
+			IncreasePC();
+			delete[] filename;
+			return;
+		}
 
         default:
             DEBUG('a', "\nUnexpected user mode exception!\n");
