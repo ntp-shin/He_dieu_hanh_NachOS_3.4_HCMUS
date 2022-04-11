@@ -555,7 +555,7 @@ ExceptionHandler(ExceptionType which)
 			//Input id cua file(OpenFileID)
 			// Output: 0: thanh cong, -1 that bai
 			int fid = machine->ReadRegister(4); // Lay id cua file tu thanh ghi so 4
-			if (fid >= 0 && fid <= 9) //Chi xu li khi fid nam trong [0, 14]
+			if (fid >= 0 && fid <= 9) //Chi xu li khi fid nam trong [0, 9]
 			{
 				if (fileSystem->openf[fid]) //neu mo file thanh cong
 				{
