@@ -14,27 +14,36 @@
 #define MAX_LENGTH 32
 int main()
 {   
-	char* fileName = "abcd.txt";
-	int c = 1;
-	c = Create(fileName);
-	if (c == 0) // Goi ham CreateFile de tao file. Tra ve 0 neu thanh cong
+	char* fileName = "123.txt";
+	char* nameFile = "a.txt";
+	char* name1 = "!!!Mmotttttt1111ttt";
+	char* name2 = "@@@Haiii2222iiiiiiiii";
+	int c1, c2 = 1;
+	int d1, d2 = 1;
+	c1 = Open(fileName);
+	c2 = Open(nameFile);
+	d2 = Write(name2, 50, c2);
+	d1 = Write(name1, 50, c1);
+	if (c1 != -1 && d1 != -1) // Goi ham CreateFile de tao file. Tra ve 0 neu thanh cong
 	{
-		PrintString("Create file thanh cong.");
+		PrintNum(c1);
+		PrintString(" - vvvvvvvvvvvv thanh cong.\n");
 	}
 	else
 	{
-		PrintString("Loi khi tao file.");
+		PrintNum(c1);
+		PrintString(" - Loi khi tao famkdanile.\n");
     }
 
-	c = Open(fileName);
-
-	if (c != -1) // Goi ham CreateFile de tao file. Tra ve 0 neu thanh cong
+	if (c2 != -1 && d2 != -1) // Goi ham CreateFile de tao file. Tra ve 0 neu thanh cong
 	{
-		PrintString("vvvvvvvvvvvv thanh cong.");
+		PrintNum(c2);
+		PrintString(" - vvvvvvvvvvvv thanh cong.\n");
 	}
 	else
 	{
-		PrintString("Loi khi tao famkdanile.");
+		PrintNum(c2);
+		PrintString(" - Loi khi tao famkdanile.\n");
     }
     Halt();
 }
