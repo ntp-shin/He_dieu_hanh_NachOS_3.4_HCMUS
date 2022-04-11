@@ -45,5 +45,42 @@ int main()
 		PrintNum(c2);
 		PrintString(" - Loi khi tao famkdanile.\n");
     }
+	d1 = Close(c1);
+	d2 = Close(5);
+	if (d1 != -1) // Goi ham CreateFile de tao file. Tra ve 0 neu thanh cong
+	{
+		PrintNum(c1);
+		PrintString(" - Closeeee thanh cong.\n");
+	}
+	else
+	{
+		PrintNum(c1);
+		PrintString(" - Loi khi Closeeeeee.\n");
+    }
+
+	if (d2 != -1) // Goi ham CreateFile de tao file. Tra ve 0 neu thanh cong
+	{
+		PrintNum(c2);
+		PrintString(" - Closeeee thanh cong.\n");
+	}
+	else
+	{
+		PrintNum(c2);
+		PrintString(" - Loi khi tao famkdanile.\n");
+    }
+	
+	//
+	c1 = Open(fileName);
+	d1 = Write("Say somethingg", 50, c1);
+	if (c1 != -1 && d1 != -1) // Goi ham CreateFile de tao file. Tra ve 0 neu thanh cong
+	{
+		PrintNum(c1);
+		PrintString(" - vvvvvvvvvvvv thanh cong.\n");
+	}
+	else
+	{
+		PrintNum(c1);
+		PrintString(" - Loi khi tao famkdanile.\n");
+    }
     Halt();
 }

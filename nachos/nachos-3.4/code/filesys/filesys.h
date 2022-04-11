@@ -66,7 +66,6 @@ class FileSystem {
 	{
 		for(int i = 2; i < 10; i++)
 		{
-			printf("\n33333333333333333333333\n");
 			if(openf[i] == NULL) return i;		
 		}
 		return -1;

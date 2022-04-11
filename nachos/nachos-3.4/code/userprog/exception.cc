@@ -549,6 +549,28 @@ ExceptionHandler(ExceptionType which)
 				}
 			}
 		}
+
+		case SC_Close:
+		{
+			//Input id cua file(OpenFileID)
+			// Output: 0: thanh cong, -1 that bai
+			int fid = machine->ReadRegister(4); // Lay id cua file tu thanh ghi so 4
+			if (fid >= 0 && fid <= 9) //Chi xu li khi fid nam trong [0, 14]
+			{
+				if (fileSystem->openf[fid]) //neu mo file thanh cong
+				{
+					delete fileSystem->openf[fid]; //Xoa vung nho luu tru file
+					fileSystem->openf[fid] = NULL; //Gan vung nho NULL
+					machine->WriteRegister(2, 0);
+                    IncreasePC();
+					return;
+				}
+			}
+			machine->WriteRegister(2, -1);
+            IncreasePC();
+			return;
+		}
+
         default:
             DEBUG('a', "\nUnexpected user mode exception!\n");
             printf("\nUnexpected user mode exception %d %d!\n", which, type);
