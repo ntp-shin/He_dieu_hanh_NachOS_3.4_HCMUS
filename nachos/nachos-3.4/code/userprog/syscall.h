@@ -38,7 +38,8 @@
 #define SC_RandomNum    16
 #define SC_ReadString   17
 #define SC_PrintString  18
-#define SC_Remove   19
+#define SC_Remove       19
+#define SC_Seek         20
 
 #ifndef IN_ASM
 
@@ -115,6 +116,8 @@ int Write(char *buffer, int size, OpenFileId id);
  * you should always wait until you can return at least one character).
  */
 int Read(char *buffer, int size, OpenFileId id);
+
+int Seek(int pos, OpenFileId id);
 
 /* Close the file, we're done reading and writing to it. */
 int Close(OpenFileId id);

@@ -413,21 +413,22 @@ ExceptionHandler(ExceptionType which)
             IncreasePC(); // Tang Program Counter 
             break;
         }
+
         case SC_Create: 
         { 
             int virtAddr; 
             char* filename; 
-            DEBUG('a',"\n SC_Create call ..."); 
-            DEBUG('a',"\n Reading virtual address of filename"); 
+            DEBUG('a',"SC_Create call ...\n"); 
+            DEBUG('a',"Reading virtual address of filename\n");
             // Lấy tham số tên tập tin từ thanh ghi r4 
             virtAddr = machine->ReadRegister(4); 
-            DEBUG ('a',"\n Reading filename."); 
+            DEBUG ('a',"Reading filename.\n"); 
             // MaxFileLength là = 32 
             filename = User2System(virtAddr,MaxFileLength + 1);
             if (strlen(filename) == 0) 
             { 
-                printf("\n You don't input anything\n"); 
-                DEBUG('a',"\n You don't input anything\n"); 
+                printf("You don't input anything!\n"); 
+                DEBUG('a',"You don't input anything!\n"); 
                 machine->WriteRegister(2, -1); // trả về lỗi cho chương 
                 // trình người dùng 
                 IncreasePC();
@@ -436,15 +437,15 @@ ExceptionHandler(ExceptionType which)
             }  
             if (filename == NULL) 
             { 
-                printf("\n Not enough memory in system"); 
-                DEBUG('a',"\n Not enough memory in system"); 
+                printf("Not enough memory in system!\n"); 
+                DEBUG('a',"Not enough memory in system!\n"); 
                 machine->WriteRegister(2, -1); // trả về lỗi cho chương 
                 // trình người dùng 
                 IncreasePC();
                 delete filename; 
                 return;
             } 
-            DEBUG('a',"\n Finish reading filename."); 
+            DEBUG('a',"Finish reading filename.\n"); 
             //DEBUG('a',"\n File name : '"<<filename<<"'"); 
             // Create file with size = 0 
             // Dùng đối tượng fileSystem của lớp OpenFile để tạo file, 
@@ -454,7 +455,7 @@ ExceptionHandler(ExceptionType which)
             // trên ổ đĩa là một đồ án khác 
             if (!fileSystem->Create(filename, 0)) 
             { 
-                printf("\n Error create file '%s'",filename); 
+                printf("Error create file '%s'\n",filename); 
                 machine->WriteRegister(2, -1); 
                 IncreasePC();
                 delete filename; 
@@ -466,6 +467,7 @@ ExceptionHandler(ExceptionType which)
             delete filename; 
             return; 
         }
+
 		case SC_Open:
 		{
 			// Input: fileName: Ten chuoi name cua file, 
@@ -495,6 +497,7 @@ ExceptionHandler(ExceptionType which)
 			delete[] filename;
 			return;
 		}
+
 		case SC_Write:
 		{
 			// Input: buffer(char*), so ky tu(int), id cua file(OpenFileID)
@@ -623,10 +626,64 @@ ExceptionHandler(ExceptionType which)
 			return;
 		}
 
+        case SC_Seek:
+		{
+			// Input: Vi tri(int), id cua file(OpenFileID)
+			// Output: -1: Loi, Vi tri thuc su: Thanh cong
+			// Cong dung: Di chuyen con tro den vi tri thich hop trong file voi tham so la vi tri can chuyen va id cua file
+			
+            int pos = machine->ReadRegister(4); // Lay vi tri can chuyen con tro den trong file
+			int id = machine->ReadRegister(5); // Lay id cua file
+			
+            // Kiem tra id cua file truyen vao co nam ngoai bang mo ta file khong
+			if (id < 0 || id > 9)
+			{
+				printf("Khong the seek vi id nam ngoai bang mo ta file!\n");
+				machine->WriteRegister(2, -1);
+				IncreasePC();
+				return;
+			}
+
+			// Kiem tra file co dang open khong
+			if (fileSystem->openf[id] == NULL)
+			{
+				printf("Khong the seek vi file nay chua open!\n");
+				machine->WriteRegister(2, -1);
+				IncreasePC();
+				return;
+			}
+
+			// Kiem tra co goi Seek tren console khong
+			if (id == 0 || id == 1)
+			{
+				printf("Khong the seek tren file console!\n");
+				machine->WriteRegister(2, -1);
+				IncreasePC();
+				return;
+			}
+
+			// Neu pos = -1 thi gan pos = cuoi file nguoc lai thi giu nguyen pos
+			pos = (pos == -1) ? fileSystem->openf[id]->Length() : pos;
+			if (pos > fileSystem->openf[id]->Length() || pos < 0) // Kiem tra lai vi tri pos co hop le khong
+			{
+				printf("Khong the seek file den vi tri nay!\n");
+				machine->WriteRegister(2, -1);
+			}
+			else
+			{
+				// Neu hop le thi tra ve vi tri di chuyen thuc su trong file
+				fileSystem->openf[id]->Seek(pos);
+				machine->WriteRegister(2, pos);
+			}
+            
+			IncreasePC();
+			return;
+		}
+
         case SC_Remove: 
         { 
             int virtAddr, checkOpen; 
-            char* filename; 
+            char* filename;
             
             // Lấy tham số tên tập tin từ thanh ghi r4 
             virtAddr = machine->ReadRegister(4); 

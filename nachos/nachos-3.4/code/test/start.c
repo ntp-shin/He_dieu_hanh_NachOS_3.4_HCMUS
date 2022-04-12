@@ -114,6 +114,14 @@ Write:
 	j	$31
 	.end Write
 
+	.globl Seek
+	.ent	Seek
+Seek:
+	addiu $2,$0,SC_Seek
+	syscall
+	j	$31
+	.end Seek
+
 	.globl Close
 	.ent	Close
 Close:
