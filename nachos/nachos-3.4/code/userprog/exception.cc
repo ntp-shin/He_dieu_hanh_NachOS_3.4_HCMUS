@@ -578,6 +578,11 @@ ExceptionHandler(ExceptionType which)
 				return;
 			}
 
+            // truong hop size < 0
+            if (charcount < 0) {
+                charcount *= -1;
+            }
+
             OldPos = fileSystem->openf[id]->GetCurrentPos(); // Kiem tra thanh cong thi lay vi tri OldPos
 			buf = User2System(virtAddr, charcount); // Copy chuoi tu vung nho User Space sang System Space voi bo dem buffer dai charcount
 
@@ -590,13 +595,14 @@ ExceptionHandler(ExceptionType which)
 			}
 
 			// Xet truong hop doc file binh thuong thi tra ve so byte thuc su
-			charcount = 0;
-            while (buf[charcount] != NULL)
-                charcount++;
+			// charcount = 0;
+            // while (buf[charcount] != NULL)
+            //     charcount++;
                 
             if (id > 1) {
 				if ((fileSystem->openf[id]->Read(buf, charcount)) > 0) {
                     //printf("\nDoc file binh thuong.");
+                    
                     // So byte thuc su = NewPos - OldPos
                     NewPos = fileSystem->openf[id]->GetCurrentPos();
                     // Copy chuoi tu vung nho System Space sang User Space voi bo dem buffer co do dai la so byte thuc su 
@@ -605,7 +611,7 @@ ExceptionHandler(ExceptionType which)
 				}
                 else {
                     // Truong hop con lai la doc file co noi dung la NULL tra ve -2
-                    //printf("\nDoc file rong.");
+                    //printf("Doc file rong.\n");
                     machine->WriteRegister(2, -2);
 			    }
 			}
@@ -650,7 +656,7 @@ ExceptionHandler(ExceptionType which)
             } 
             DEBUG('a',"\n Finish reading filename."); 
            
-            if (checkOpen != -1) {
+            if (checkOpen != -1 && fileSystem->openf[checkOpen] != NULL) {
                 printf("This file is still opening, Try again later!!!\n"); 
                 machine->WriteRegister(2, -1); 
                 IncreasePC();
