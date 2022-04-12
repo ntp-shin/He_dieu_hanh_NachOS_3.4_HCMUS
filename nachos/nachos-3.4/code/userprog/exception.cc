@@ -550,6 +550,136 @@ ExceptionHandler(ExceptionType which)
 			}
 		}
 
+        case SC_Read:
+		{
+			// Input: buffer(char*), so ky tu(int), id cua file(OpenFileID)
+			// Output: -1: Loi, So byte read thuc su: Thanh cong, -2: Thanh cong
+			// Cong dung: Doc file voi tham so la buffer, so ky tu cho phep va id cua file
+			int virtAddr = machine->ReadRegister(4); // Lay dia chi cua tham so buffer tu thanh ghi so 4
+			int charcount = machine->ReadRegister(5); // Lay charcount tu thanh ghi so 5
+			int id = machine->ReadRegister(6); // Lay id cua file tu thanh ghi so 6 
+			int OldPos;
+			int NewPos;
+			char *buf;
+			// Kiem tra id cua file truyen vao co nam ngoai bang mo ta file khong
+			if (id < 0 || id > 9)
+			{
+				printf("\nKhong the read vi id nam ngoai bang mo ta file.");
+				machine->WriteRegister(2, -1);
+				IncreasePC();
+				return;
+			}
+			// Kiem tra file co ton tai khong
+			if (fileSystem->openf[id] == NULL)
+			{
+				printf("\nKhong the read vi file nay khong ton tai.");
+				machine->WriteRegister(2, -1);
+				IncreasePC();
+				return;
+			}
+
+            OldPos = fileSystem->openf[id]->GetCurrentPos(); // Kiem tra thanh cong thi lay vi tri OldPos
+			buf = User2System(virtAddr, charcount); // Copy chuoi tu vung nho User Space sang System Space voi bo dem buffer dai charcount
+
+			// Xet truong hop ghi file only read (type quy uoc la 1) hoac file stdin (type quy uoc la 2) thi tra ve -1
+			if (id == 1 || id == 0) {
+				printf("\nKhong the write file stdin hoac file only read.");
+				machine->WriteRegister(2, -1);
+				IncreasePC();
+				return;
+			}
+
+			// Xet truong hop doc file binh thuong thi tra ve so byte thuc su
+			charcount = 0;
+            while (buf[charcount] != NULL)
+                charcount++;
+                
+            if (id > 1) {
+				if ((fileSystem->openf[id]->Read(buf, charcount)) > 0) {
+                    //printf("\nDoc file binh thuong.");
+                    // So byte thuc su = NewPos - OldPos
+                    NewPos = fileSystem->openf[id]->GetCurrentPos();
+                    // Copy chuoi tu vung nho System Space sang User Space voi bo dem buffer co do dai la so byte thuc su 
+                    System2User(virtAddr, NewPos - OldPos, buf); 
+                    machine->WriteRegister(2, NewPos - OldPos);
+				}
+                else {
+                    // Truong hop con lai la doc file co noi dung la NULL tra ve -2
+                    //printf("\nDoc file rong.");
+                    machine->WriteRegister(2, -2);
+			    }
+			}
+            
+			delete buf;
+			IncreasePC();
+			return;
+		}
+
+        case SC_Remove: 
+        { 
+            int virtAddr, checkOpen; 
+            char* filename; 
+            
+            // Lấy tham số tên tập tin từ thanh ghi r4 
+            virtAddr = machine->ReadRegister(4); 
+            checkOpen = machine->ReadRegister(5);
+            DEBUG ('a',"\n Reading filename."); 
+
+            // MaxFileLength là = 32 
+            filename = User2System(virtAddr,MaxFileLength + 1);
+            if (strlen(filename) == 0) 
+            { 
+                printf("\n You don't input anything\n"); 
+                DEBUG('a',"\n You don't input anything\n"); 
+                machine->WriteRegister(2, -1); // trả về lỗi cho chương 
+                // trình người dùng 
+                IncreasePC();
+                delete filename; 
+                return;
+            }
+
+            if (filename == NULL) 
+            { 
+                printf("\n Not enough memory in system"); 
+                DEBUG('a',"\n Not enough memory in system"); 
+                machine->WriteRegister(2, -1); // trả về lỗi cho chương 
+                // trình người dùng 
+                IncreasePC();
+                delete filename; 
+                return;
+            } 
+            DEBUG('a',"\n Finish reading filename."); 
+           
+            if (checkOpen != -1) {
+                printf("This file is still opening, Try again later!!!\n"); 
+                machine->WriteRegister(2, -1); 
+                IncreasePC();
+                delete filename; 
+                return; 
+            }
+
+            // Dùng đối tượng fileSystem của lớp OpenFile để tạo file, 
+            // việc tạo file này là sử dụng các thủ tục tạo file của hệ điều 
+            // hành Linux, chúng ta không quản ly trực tiếp các block trên 
+            // đĩa cứng cấp phát cho file, việc quản ly các block của file 
+            // trên ổ đĩa là một đồ án khác 
+            if (!fileSystem->Remove(filename)) 
+            { 
+                printf("\n Error delete file '%s'",filename); 
+                machine->WriteRegister(2, -1); 
+                IncreasePC();
+                delete filename; 
+                return; 
+            } 
+
+            printf("Deleted!!!\n"); 
+            machine->WriteRegister(2, 0); // trả về cho chương trình 
+            // người dùng thành công 
+            IncreasePC();
+            delete filename; 
+            return; 
+        }
+
 		case SC_Close:
 		{
 			//Input id cua file(OpenFileID)
