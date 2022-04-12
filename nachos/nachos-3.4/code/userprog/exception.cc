@@ -569,6 +569,7 @@ ExceptionHandler(ExceptionType which)
 				IncreasePC();
 				return;
 			}
+
 			// Kiem tra file co ton tai khong
 			if (fileSystem->openf[id] == NULL)
 			{
@@ -580,7 +581,10 @@ ExceptionHandler(ExceptionType which)
 
             // truong hop size < 0
             if (charcount < 0) {
-                charcount *= -1;
+                printf("So ky tu can doc khong hop le!!!\n");
+                machine->WriteRegister(2, -1);
+				IncreasePC();
+				return;
             }
 
             OldPos = fileSystem->openf[id]->GetCurrentPos(); // Kiem tra thanh cong thi lay vi tri OldPos
@@ -588,29 +592,27 @@ ExceptionHandler(ExceptionType which)
 
 			// Xet truong hop ghi file only read (type quy uoc la 1) hoac file stdin (type quy uoc la 2) thi tra ve -1
 			if (id == 1 || id == 0) {
-				printf("\nKhong the write file stdin hoac file only read.");
+				printf("\nKhong the read file stdin hoac file only read.");
 				machine->WriteRegister(2, -1);
 				IncreasePC();
 				return;
 			}
 
-			// Xet truong hop doc file binh thuong thi tra ve so byte thuc su
-			// charcount = 0;
-            // while (buf[charcount] != NULL)
-            //     charcount++;
-                
+            // Truong hop file co ton tai
             if (id > 1) {
+                // Doc file co chua noi dung
 				if ((fileSystem->openf[id]->Read(buf, charcount)) > 0) {
                     //printf("\nDoc file binh thuong.");
-                    
+
                     // So byte thuc su = NewPos - OldPos
                     NewPos = fileSystem->openf[id]->GetCurrentPos();
                     // Copy chuoi tu vung nho System Space sang User Space voi bo dem buffer co do dai la so byte thuc su 
                     System2User(virtAddr, NewPos - OldPos, buf); 
                     machine->WriteRegister(2, NewPos - OldPos);
 				}
+
+                // Doc file rong
                 else {
-                    // Truong hop con lai la doc file co noi dung la NULL tra ve -2
                     //printf("Doc file rong.\n");
                     machine->WriteRegister(2, -2);
 			    }
@@ -644,6 +646,7 @@ ExceptionHandler(ExceptionType which)
                 return;
             }
 
+            // TH ten file == NULL
             if (filename == NULL) 
             { 
                 printf("\n Not enough memory in system"); 
@@ -656,6 +659,7 @@ ExceptionHandler(ExceptionType which)
             } 
             DEBUG('a',"\n Finish reading filename."); 
            
+            // TH file dang mo 
             if (checkOpen != -1 && fileSystem->openf[checkOpen] != NULL) {
                 printf("This file is still opening, Try again later!!!\n"); 
                 machine->WriteRegister(2, -1); 
@@ -664,11 +668,7 @@ ExceptionHandler(ExceptionType which)
                 return; 
             }
 
-            // Dùng đối tượng fileSystem của lớp OpenFile để tạo file, 
-            // việc tạo file này là sử dụng các thủ tục tạo file của hệ điều 
-            // hành Linux, chúng ta không quản ly trực tiếp các block trên 
-            // đĩa cứng cấp phát cho file, việc quản ly các block của file 
-            // trên ổ đĩa là một đồ án khác 
+            // TH file khong ton tai
             if (!fileSystem->Remove(filename)) 
             { 
                 printf("\n Error delete file '%s'",filename); 
@@ -678,9 +678,9 @@ ExceptionHandler(ExceptionType which)
                 return; 
             } 
 
+            // Xoa thanh cong
             printf("Deleted!!!\n"); 
-            machine->WriteRegister(2, 0); // trả về cho chương trình 
-            // người dùng thành công 
+            machine->WriteRegister(2, 0);
             IncreasePC();
             delete filename; 
             return; 
