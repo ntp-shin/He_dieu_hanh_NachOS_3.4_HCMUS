@@ -564,7 +564,7 @@ ExceptionHandler(ExceptionType which)
 			// Kiem tra id cua file truyen vao co nam ngoai bang mo ta file khong
 			if (id < 0 || id > 9)
 			{
-				printf("\nKhong the read vi id nam ngoai bang mo ta file.");
+				printf("Khong the read vi id nam ngoai bang mo ta file!\n");
 				machine->WriteRegister(2, -1);
 				IncreasePC();
 				return;
@@ -573,7 +573,7 @@ ExceptionHandler(ExceptionType which)
 			// Kiem tra file co ton tai khong
 			if (fileSystem->openf[id] == NULL)
 			{
-				printf("\nKhong the read vi file nay khong ton tai.");
+				printf("Khong the read vi file nay khong ton tai!\n");
 				machine->WriteRegister(2, -1);
 				IncreasePC();
 				return;
@@ -592,7 +592,7 @@ ExceptionHandler(ExceptionType which)
 
 			// Xet truong hop ghi file only read (type quy uoc la 1) hoac file stdin (type quy uoc la 2) thi tra ve -1
 			if (id == 1 || id == 0) {
-				printf("\nKhong the read file stdin hoac file only read.");
+				printf("Khong the read file stdin hoac file only read!\n");
 				machine->WriteRegister(2, -1);
 				IncreasePC();
 				return;
@@ -602,7 +602,7 @@ ExceptionHandler(ExceptionType which)
             if (id > 1) {
                 // Doc file co chua noi dung
 				if ((fileSystem->openf[id]->Read(buf, charcount)) > 0) {
-                    //printf("\nDoc file binh thuong.");
+                    //printf("Doc file binh thuong.\n");
 
                     // So byte thuc su = NewPos - OldPos
                     NewPos = fileSystem->openf[id]->GetCurrentPos();
@@ -613,7 +613,7 @@ ExceptionHandler(ExceptionType which)
 
                 // Doc file rong
                 else {
-                    //printf("Doc file rong.\n");
+                    printf("Doc file rong!\n");
                     machine->WriteRegister(2, -2);
 			    }
 			}
