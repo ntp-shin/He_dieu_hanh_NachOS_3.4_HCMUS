@@ -28,7 +28,7 @@
 #define SC_Write	7
 #define SC_Close	8
 #define SC_Fork		9
-#define SC_Yield	10
+#define SC_Yield    10
 
 #define SC_ReadNum      11
 #define SC_PrintNum     12
@@ -38,6 +38,7 @@
 #define SC_RandomNum    16
 #define SC_ReadString   17
 #define SC_PrintString  18
+#define SC_Remove   19
 
 #ifndef IN_ASM
 
@@ -97,6 +98,7 @@ typedef int OpenFileId;
  
 /* Create a Nachos file, with "name" */
 int Create(char *name);
+int Remove(char *name, OpenFileId id);
 
 /* Open the Nachos file "name", and return an "OpenFileId" that can 
  * be used to read and write to the file.
