@@ -35,7 +35,7 @@ CPP = gcc -E
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 
-all: halt shell matmult sort help ascii bubble_sort check_syscall
+all: halt shell matmult sort help ascii bubble_sort check_syscall copy
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.c > strt.s
@@ -89,3 +89,9 @@ check_syscall.o: check_syscall.c
 check_syscall: check_syscall.o start.o
 	$(LD) $(LDFLAGS) start.o check_syscall.o -o check_syscall.coff
 	../bin/coff2noff check_syscall.coff check_syscall
+
+copy.o: copy.c
+	$(CC) $(CFLAGS) -c copy.c
+copy: copy.o start.o
+	$(LD) $(LDFLAGS) start.o copy.o -o copy.coff
+	../bin/coff2noff copy.coff copy
