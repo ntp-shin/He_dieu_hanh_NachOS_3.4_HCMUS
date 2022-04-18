@@ -10,12 +10,12 @@ int main()
     ReadString(buf, MAX_LENGTH);
     id = Open(buf);
 
-    if (id == -1)
+    if (id == -1)   // Truong hop khong the mo file -> dung program
     {
         PrintString("Khong the mo file!");
         Halt();
     }
-    else
+    else    // doc tung ki tu tu file, neu la ki tu trong thi dung program, nguoc lai in ra
         while (1)
         {
             chr = "\0";
