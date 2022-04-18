@@ -626,7 +626,7 @@ ExceptionHandler(ExceptionType which)
 
                 // Doc file rong
                 else {
-                    printf("Doc file rong!\n");
+                    //printf("Doc file rong!\n");
                     machine->WriteRegister(2, -2);
 			    }
 			}
