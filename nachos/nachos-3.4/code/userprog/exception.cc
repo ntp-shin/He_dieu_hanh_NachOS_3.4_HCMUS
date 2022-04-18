@@ -509,10 +509,20 @@ ExceptionHandler(ExceptionType which)
 			int OldPos;
 			int NewPos;
 			char *buf;
+
+            // Kiem tra size cua buffer, neu am thi tra ve -1
+            if (charcount < 0)
+            {
+                printf("So ki tu ghi khong hop le!\n");
+                machine->WriteRegister(2, -1);
+                IncreasePC();
+                return;
+            }
+
 			// Kiem tra id cua file truyen vao co nam ngoai bang mo ta file khong
 			if (id < 0 || id > 9)
 			{
-				printf("\nKhong the write - Vi id nam ngoai bang mo ta file.");
+				printf("Khong the write - Vi id nam ngoai bang mo ta file!\n");
 				machine->WriteRegister(2, -1);
 				IncreasePC();
 				return;
@@ -520,7 +530,7 @@ ExceptionHandler(ExceptionType which)
 			// Kiem tra file co ton tai khong
 			if (fileSystem->openf[id] == NULL)
 			{
-				printf("\nKhong the write vi file nay khong ton tai.");
+				printf("Khong the write vi file nay khong ton tai!\n");
 				machine->WriteRegister(2, -1);
 				IncreasePC();
 				return;
@@ -528,7 +538,7 @@ ExceptionHandler(ExceptionType which)
 			// Xet truong hop ghi file only read (type quy uoc la 1) hoac file stdin (type quy uoc la 2) thi tra ve -1
 			if (id == 1 || id == 0)
 			{
-				printf("\nKhong the write file stdin hoac file only read.");
+				printf("Khong the write file stdin hoac file only read!\n");
 				machine->WriteRegister(2, -1);
 				IncreasePC();
 				return;
@@ -688,16 +698,15 @@ ExceptionHandler(ExceptionType which)
             // Lấy tham số tên tập tin từ thanh ghi r4 
             virtAddr = machine->ReadRegister(4); 
             checkOpen = machine->ReadRegister(5);
-            DEBUG ('a',"\n Reading filename."); 
+            DEBUG('a',"Reading filename.\n");
 
             // MaxFileLength là = 32 
             filename = User2System(virtAddr,MaxFileLength + 1);
-            if (strlen(filename) == 0) 
+            if (strlen(filename) == 0)
             { 
-                printf("\n You don't input anything\n"); 
-                DEBUG('a',"\n You don't input anything\n"); 
-                machine->WriteRegister(2, -1); // trả về lỗi cho chương 
-                // trình người dùng 
+                printf("You don't input anything!\n"); 
+                DEBUG('a',"You don't input anything!\n"); 
+                machine->WriteRegister(2, -1); // trả về lỗi cho chương trình người dùng 
                 IncreasePC();
                 delete filename; 
                 return;
@@ -706,18 +715,17 @@ ExceptionHandler(ExceptionType which)
             // TH ten file == NULL
             if (filename == NULL) 
             { 
-                printf("\n Not enough memory in system"); 
-                DEBUG('a',"\n Not enough memory in system"); 
-                machine->WriteRegister(2, -1); // trả về lỗi cho chương 
-                // trình người dùng 
+                printf("Not enough memory in system!\n");
+                DEBUG('a',"Not enough memory in system\n");
+                machine->WriteRegister(2, -1); // trả về lỗi cho chương trình người dùng 
                 IncreasePC();
                 delete filename; 
                 return;
             } 
-            DEBUG('a',"\n Finish reading filename."); 
+            DEBUG('a',"Finish reading filename.\n"); 
            
             // TH file dang mo 
-            if (checkOpen != -1 && fileSystem->openf[checkOpen] != NULL) {
+            if (checkOpen != -1) {
                 printf("This file is still opening, Try again later!!!\n"); 
                 machine->WriteRegister(2, -1); 
                 IncreasePC();
@@ -728,7 +736,7 @@ ExceptionHandler(ExceptionType which)
             // TH file khong ton tai
             if (!fileSystem->Remove(filename)) 
             { 
-                printf("\n Error delete file '%s'",filename); 
+                printf("Error delete file '%s'\n", filename);
                 machine->WriteRegister(2, -1); 
                 IncreasePC();
                 delete filename; 
