@@ -4,26 +4,18 @@
 int main()
 {
     char* name, * chr;
-    int id, check;
+    int check;
 
     PrintString("Nhap ten file: ");
     ReadString(name, MAX_LENGTH);
-    id = Open(name);
+    check = -1;
 
-    if (id == -1)   // Truong hop khong the mo file -> dung program
-    {
-        PrintString("Khong the mo file!");
-        Halt();
+    check = Remove(name, -1);
+    if(check == -1){
+        PrintString("Xoa file that bai.");
     }
     else{
-        check = Remove(name, id);
-        if(check == -1){
-            PrintString("Xoa file that bai.");
-        }
-        else{
-            PrintString("Xoa fie thanh cong.");
-        }
-        check = Close(id);
+        PrintString("Xoa fie thanh cong.");
     }
     Halt();
 }

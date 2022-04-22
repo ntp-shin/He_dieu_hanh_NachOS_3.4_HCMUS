@@ -79,6 +79,8 @@ class FileSystem {
   public:
 	//Khai bao
   	OpenFile* openf[10];
+	// Đây là mảng danh sách các slot của Open File
+	// Gồm 10 phần tử, trong đó có 2 phần tử là stdin và stdout
 	int index;
     FileSystem(bool format);		// Initialize the file system.
 					// Must be called *after* "synchDisk" 

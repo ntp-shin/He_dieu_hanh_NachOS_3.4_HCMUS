@@ -472,7 +472,7 @@ ExceptionHandler(ExceptionType which)
 		{
 			// Input: fileName: Ten chuoi name cua file, 
 			// Output: Tra ve OpenFileID (int) neu thanh cong, -1 neu loi
-			// Chuc nang: Tra ve ID cua file. 2 - 9
+			// Chuc nang: Mo file va tra ve ID cua file. 2 -> 9
 
 			//OpenFileID Open(char *name)
 			int virtAddr = machine->ReadRegister(4); // Lay dia chi cua tham so *name* tu thanh ghi so  4
@@ -480,9 +480,12 @@ ExceptionHandler(ExceptionType which)
 			filename = User2System(virtAddr, MaxFileLength); 
 
 			int freeSlot = fileSystem->FindFreeSlot();
-            
-			if (freeSlot != -1) //Chi xu li khi con slot trong
+
+            //Chi xu li khi con slot trong
+			if (freeSlot != -1) 
 			{
+                // Gán giá trị openf[freeSlot] = Open(filename)
+                // Nếu giá trị này khác NULL thì trả về thanh ghi OpenIDFile (freeSlot)
                 if ((fileSystem->openf[freeSlot] = fileSystem->Open(filename)) != NULL) //Mo file thanh cong
                 {
                     machine->WriteRegister(2, freeSlot); //tra ve OpenFileID
@@ -492,7 +495,8 @@ ExceptionHandler(ExceptionType which)
                 }
 
 			}
-			machine->WriteRegister(2, -1); //Khong mo duoc file return -1
+            // Nếu không thể open file thì trả về -1
+			machine->WriteRegister(2, -1);
 			IncreasePC();
 			delete[] filename;
 			return;
@@ -501,13 +505,11 @@ ExceptionHandler(ExceptionType which)
 		case SC_Write:
 		{
 			// Input: buffer(char*), so ky tu(int), id cua file(OpenFileID)
-			// Output: -1: Loi, So byte write thuc su: Thanh cong, -2: Thanh cong
-			// Cong dung: Ghi file voi tham so la buffer, so ky tu cho phep va id cua file
+			// Output: -1 = Lõi. Còn lại = Thành công
+			// Cong dung: Ghi vào file chuỗi buffer
 			int virtAddr = machine->ReadRegister(4); // Lay dia chi cua tham so buffer tu thanh ghi so 4
 			int charcount = machine->ReadRegister(5); // Lay charcount tu thanh ghi so 5
 			int id = machine->ReadRegister(6); // Lay id cua file tu thanh ghi so 6
-			int OldPos;
-			int NewPos;
 			char *buf;
 
             // Kiem tra size cua buffer, neu am thi tra ve -1
@@ -543,19 +545,18 @@ ExceptionHandler(ExceptionType which)
 				IncreasePC();
 				return;
 			}
-			OldPos = fileSystem->openf[id]->GetCurrentPos(); // Kiem tra thanh cong thi lay vi tri OldPos
 			buf = User2System(virtAddr, charcount);  // Copy chuoi tu vung nho User Space sang System Space voi bo dem buffer dai charcount
-			// Xet truong hop ghi file read & write (type quy uoc la 0) thi tra ve so byte thuc su
-			charcount = 0;
+
+			// Xử lí trường hợp strlen(buffer) < charcount
+            // Thay vì ghi ra kí tự NULL thì ta chỉ write các giá trị char* != NULL
+            charcount = 0;
             while (buf[charcount] != NULL)
                 charcount++;
             if (id > 1)
 			{
 				if ((fileSystem->openf[id]->Write(buf, charcount)) > 0)
 				{
-					// So byte thuc su = NewPos - OldPos
-					NewPos = fileSystem->openf[id]->GetCurrentPos();
-					machine->WriteRegister(2, NewPos - OldPos);
+					machine->WriteRegister(2, 0);
 					delete buf;
 					IncreasePC();
 					return;

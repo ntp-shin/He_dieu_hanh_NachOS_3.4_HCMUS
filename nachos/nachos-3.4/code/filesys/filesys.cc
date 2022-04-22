@@ -236,7 +236,8 @@ FileSystem::Open(char *name)
     directory->FetchFrom(directoryFile);
     sector = directory->Find(name); 
     if (sector >= 0) 		
-	openf[index] = new OpenFile(sector);	// name was found in directory 
+        // name was found in directory 
+	    openf[index] = new OpenFile(sector);	
     delete directory;
     //return openFile;				// return NULL if not found
 	index++;
@@ -246,6 +247,7 @@ FileSystem::Open(char *name)
 int 
 FileSystem::FindFreeSlot()
 {
+    // 0, 1 --> stdin và sdtout
 	for(int i = 2; i < 10; i++)
 	{
 		if(openf[i] == NULL) return i;		
