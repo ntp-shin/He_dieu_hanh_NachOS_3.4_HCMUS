@@ -14,12 +14,26 @@
 #define MAX_LENGTH 32
 int main()
 {
-	int a = Open("a.txt");
-    int b = Open("b.txt");
+	int a;
+    int b;
+    int size;
+    char* filename1;
+    char* filename2;
     char* buffer;
 
-    Read(buffer, 50, a);
-    Write(buffer, 40, b);
+    PrintString("Nhap vao file nguon(o day la a.txt): ");
+    ReadString(filename1, 32);
+    a = Open(filename1);
+    size = Seek(-1, a);
+    PrintString("Nhap vao file dich(o day la b.txt): ");
+    ReadString(filename2, size);
+    b = Open(filename2);
+    
+    Seek(0, a);
+    Read(buffer, size, a);
+    Write(buffer, size, b);
     PrintString("Copy thanh cong ^^\n");
+    Close(a);
+    Close(b);
     Halt();
 }
