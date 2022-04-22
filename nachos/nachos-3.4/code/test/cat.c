@@ -27,5 +27,6 @@ int main()
                 PrintString(chr);
         }
 
+    Close(id);
     Halt();
 }

@@ -36,5 +36,8 @@ int main()
     }
 
     PrintString("Noi hai file thanh cong.\n");
+    Close(id1);
+    Close(id2);
+
     Halt();
 }
