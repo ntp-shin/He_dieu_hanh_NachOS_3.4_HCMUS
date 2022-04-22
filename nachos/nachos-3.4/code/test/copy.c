@@ -16,24 +16,42 @@ int main()
 {
 	int a;
     int b;
-    int size;
+    int size, checkCreatFile1;
     char* filename1;
     char* filename2;
     char* buffer;
 
     PrintString("Nhap vao file nguon(o day la a.txt): ");
-    ReadString(filename1, 32);
+    ReadString(filename1, MAX_LENGTH);
     a = Open(filename1);
-    size = Seek(-1, a);
+
     PrintString("Nhap vao file dich(o day la b.txt): ");
-    ReadString(filename2, size);
+    ReadString(filename2, MAX_LENGTH);
+    
+    checkCreatFile1 = Create(filename2);
+    if (checkCreatFile1 == -1)
+    {
+        PrintString("Khong the tao file ");
+        PrintString(filename2);
+        PrintString("\n");
+        Halt();
+    }
     b = Open(filename2);
     
+    if (a == -1 || b == -1)
+    {
+        PrintString("Khong the mo file!\n");
+        Halt();
+    }
+
+    size = Seek(-1, a);
     Seek(0, a);
     Read(buffer, size, a);
     Write(buffer, size, b);
+
     PrintString("Copy thanh cong ^^\n");
     Close(a);
     Close(b);
+
     Halt();
 }
