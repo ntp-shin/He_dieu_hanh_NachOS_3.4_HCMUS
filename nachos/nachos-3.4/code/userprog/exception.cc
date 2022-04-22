@@ -565,15 +565,19 @@ ExceptionHandler(ExceptionType which)
 
         case SC_Read:
 		{
-			// Input: buffer(char*), so ky tu(int), id cua file(OpenFileID)
-			// Output: -1: Loi, So byte read thuc su: Thanh cong, -2: Thanh cong
+            // int Read(char *buffer, int size, OpenFileId id);
+            // tham so truyen vao bao gom 
+            // virtAddr lay dia chi duoc luu vao thanh ghi so 4 va quan li boi tham so *buffer
+            // charcount duoc lay dia chi tu thanh ghi so 5 quan li boi tham so size
+            // id cua file(OpenFileID) duoc luu vao thanh ghi so 6 va quan li boi tham so id
 			// Cong dung: Doc file voi tham so la buffer, so ky tu cho phep va id cua file
-			int virtAddr = machine->ReadRegister(4); // Lay dia chi cua tham so buffer tu thanh ghi so 4
-			int charcount = machine->ReadRegister(5); // Lay charcount tu thanh ghi so 5
-			int id = machine->ReadRegister(6); // Lay id cua file tu thanh ghi so 6 
+			int virtAddr = machine->ReadRegister(4); 
+			int charcount = machine->ReadRegister(5); 
+			int id = machine->ReadRegister(6); 
 			int OldPos;
 			int NewPos;
 			char *buf;
+
 			// Kiem tra id cua file truyen vao co nam ngoai bang mo ta file khong
 			if (id < 0 || id > 9)
 			{
@@ -694,13 +698,14 @@ ExceptionHandler(ExceptionType which)
         { 
             int virtAddr, checkOpen; 
             char* filename;
-            
-            // Lấy tham số tên tập tin từ thanh ghi r4 
+           
+            // Lay tham so ten tap tin tu thanh ghi r4 va r5
             virtAddr = machine->ReadRegister(4); 
             checkOpen = machine->ReadRegister(5);
             DEBUG('a',"Reading filename.\n");
 
             // MaxFileLength là = 32 
+            // Kiem tra do dai cua ten file co bang 0 ki tu hay khong
             filename = User2System(virtAddr,MaxFileLength + 1);
             if (strlen(filename) == 0)
             { 
