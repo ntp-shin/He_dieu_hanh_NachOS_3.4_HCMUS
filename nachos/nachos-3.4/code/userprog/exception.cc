@@ -643,12 +643,13 @@ ExceptionHandler(ExceptionType which)
 
         case SC_Seek:
 		{
-			// Input: Vi tri(int), id cua file(OpenFileID)
-			// Output: -1: Loi, Vi tri thuc su: Thanh cong
+            // Prototype: int Seek(int pos, OpenFileId id);
+			// Input: Vi tri con tro can den, id cua file
+			// Output: -1  <-> loi, Vi tri thuc su cua con tro <-> thanh cong
 			// Cong dung: Di chuyen con tro den vi tri thich hop trong file voi tham so la vi tri can chuyen va id cua file
 			
-            int pos = machine->ReadRegister(4); // Lay vi tri can chuyen con tro den trong file
-			int id = machine->ReadRegister(5); // Lay id cua file
+            int pos = machine->ReadRegister(4); // Lay vi tri can chuyen con tro den trong file tu reg 4
+			int id = machine->ReadRegister(5);  // Lay id cua file tu reg 5
 			
             // Kiem tra id cua file truyen vao co nam ngoai bang mo ta file khong
 			if (id < 0 || id > 9)
@@ -668,7 +669,7 @@ ExceptionHandler(ExceptionType which)
 				return;
 			}
 
-			// Kiem tra co goi Seek tren console khong
+			// Kiem tra co goi Seek tren file input va output khong
 			if (id == 0 || id == 1)
 			{
 				printf("Khong the seek tren file console!\n");
@@ -677,17 +678,18 @@ ExceptionHandler(ExceptionType which)
 				return;
 			}
 
-			// Neu pos = -1 thi gan pos = cuoi file nguoc lai thi giu nguyen pos
+			// Neu pos = -1 thi gan pos = cuoi file, nguoc lai thi giu nguyen pos
 			pos = (pos == -1) ? fileSystem->openf[id]->Length() : pos;
-			if (pos > fileSystem->openf[id]->Length() || pos < 0) // Kiem tra lai vi tri pos co hop le khong
+
+            // Kiem tra vi tri pos co hop le khong
+			if (pos > fileSystem->openf[id]->Length() || pos < 0)
 			{
 				printf("Khong the seek file den vi tri nay!\n");
 				machine->WriteRegister(2, -1);
 			}
 			else
 			{
-				// Neu hop le thi tra ve vi tri di chuyen thuc su trong file
-				fileSystem->openf[id]->Seek(pos);
+				fileSystem->openf[id]->Seek(pos);   // Di chuyen con tro den vi tri pos
 				machine->WriteRegister(2, pos);
 			}
             
@@ -759,20 +761,31 @@ ExceptionHandler(ExceptionType which)
 
 		case SC_Close:
 		{
-			//Input id cua file(OpenFileID)
-			// Output: 0: thanh cong, -1 that bai
-			int fid = machine->ReadRegister(4); // Lay id cua file tu thanh ghi so 4
-			if (fid >= 0 && fid <= 9) //Chi xu li khi fid nam trong [0, 9]
+            // Prototype: int Close(OpenFileId id);
+			// Input: id cua file
+			// Output: 0 <-> dong file thanh cong, -1 <-> dong file <-> that bai
+            // Cong dung: Dong file voi id cua file
+
+            // Lay id cua file tu reg 4
+			int fid = machine->ReadRegister(4);
+
+            // Kiem tra id cua file truyen vao co nam ngoai bang mo ta file khong
+			if (fid >= 0 && fid <= 9)
 			{
-				if (fileSystem->openf[fid]) //neu mo file thanh cong
+                // Kiem tra file co dang open khong
+				if (fileSystem->openf[fid])
 				{
-					delete fileSystem->openf[fid]; //Xoa vung nho luu tru file
-					fileSystem->openf[fid] = NULL; //Gan vung nho NULL
+					delete fileSystem->openf[fid];  // Xoa vung nho luu tru file
+					fileSystem->openf[fid] = NULL;  // Gan vung nho NULL
+
+                    // Tra ve thanh cong
 					machine->WriteRegister(2, 0);
                     IncreasePC();
 					return;
 				}
 			}
+
+            // Tra ve that bai
 			machine->WriteRegister(2, -1);
             IncreasePC();
 			return;

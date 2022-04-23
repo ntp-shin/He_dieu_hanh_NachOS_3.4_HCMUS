@@ -31,6 +31,7 @@ class OpenFile {
     OpenFile(int f) { file = f; currentOffset = 0; }	// open the file
     ~OpenFile() { Close(file); }			// close the file
 
+	// Seek to a pos winthin file and return the real pos in file after seek
 	int Seek(int pos) {
 		Lseek(file, pos, 0);
 		currentOffset = Tell(file);
@@ -58,6 +59,8 @@ class OpenFile {
 		}
 
     int Length() { Lseek(file, 0, 2); return Tell(file); }
+
+	// Return the current position within the file.
     int GetCurrentPos() { currentOffset = Tell(file); return currentOffset; }
   private:
     int file;
@@ -91,10 +94,9 @@ class OpenFile {
 					// file (this interface is simpler 
 					// than the UNIX idiom -- lseek to 
 					// end of file, tell, lseek back 
-    int GetCurrentPos()
-	{
-		return seekPosition;
-	}
+    
+	// Return the current position in the file
+	int GetCurrentPos() { return seekPosition; }
   private:
     FileHeader *hdr;			// Header for this file 
     int seekPosition;			// Current position within the file
