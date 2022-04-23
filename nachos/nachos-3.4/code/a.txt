@@ -1,2 +1,8 @@
-0123456789
-0123456789
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    cout << "Hello World!";
+    return 0;
+}

@@ -14,19 +14,5 @@
 #define MAX_LENGTH 32
 int main()
 {
-	char* buf;
-	int pos, id;
-
-	Open("2.txt");
-
-	PrintString("Nhap pos: ");
-	pos = ReadNum();
-	PrintString("Nhap id: ");
-	id = ReadNum();
-
-	Seek(pos, id);
-	Read(buf, 5, 2);
-	PrintString(buf);
-
     Halt();
 }
