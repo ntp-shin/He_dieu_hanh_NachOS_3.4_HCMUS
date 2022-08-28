@@ -1,5 +1,5 @@
 # NachOS_3.4_HCMUS
-*Nhom 8 - VMWare - Linux - *
+*Nhom 8 - VMWare - Linux - NachOS*
 - Nguyễn Tấn Phát
 - Lê Ngọc Tường
 - Huỳnh Vĩ Khang
